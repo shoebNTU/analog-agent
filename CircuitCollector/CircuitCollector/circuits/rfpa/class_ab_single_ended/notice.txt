@@ -1,0 +1,4 @@
+M1: output_device
+C_Cin: input_coupling
+R_Rg: gate_bias_feed
+L_Lchoke: rf_choke

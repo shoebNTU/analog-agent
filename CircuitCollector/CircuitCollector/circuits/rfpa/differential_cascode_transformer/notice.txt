@@ -1,0 +1,7 @@
+Runnable but idealized RFPA topology seed.
+
+This template maps the RFIC textbook's differential cascode/neutralized PA
+archetype into the existing single-ended RFPA testbench by using an idealized
+passive coupled-inductor transformer seed. It is useful for topology exploration
+and parser testing, but a real transformer/balun model, common-mode checks, and
+extracted passives are required before treating results as design evidence.

@@ -1,0 +1,162 @@
+[tech]
+name = "gf180mcuD"
+
+[type]
+name = "rfpa"
+
+[rfpa]
+name = "two_stage_single_ended"
+description = "Textbook-style driver plus final common-source RF PA seed"
+template_only = false
+simulation_enabled = true
+validation_status = "runnable_idealized_seed"
+recommended_use = "Explore driver sizing, interstage loading, and final-stage drive before signoff passives are available."
+notes = "Uses ideal drain-bias current sources and schematic seed matching. Not layout/passive signoff."
+
+[tech_lib]
+pdk_path = "PDK/gf180mcuD"
+corner = "typical"
+
+[testbench.dc]
+measure_DC = true
+supply_voltage = 3.3
+temperature = 27
+bias_voltage = 0.79137
+
+[testbench.rf]
+f0 = 250e6
+f_max_pad = 300e6
+R_source = 50.0
+R_load = 50.0
+Pout_target = 2e-3
+Pout_target_dbm = 3.0
+Pin_available_dbm = -15.0
+PAPR_dB = 0.0
+reference_plane = "schematic_output_node"
+passive_scope = "schematic_available_only"
+
+[testbench.rf_limits]
+I_pad_max = 10e-3
+Iout_rms_max = 10e-3
+Iout_pk_max = 10e-3
+Pdc_max = 33e-3
+Max_device_voltage = 3.3
+Max_Idc_total = 10e-3
+
+[testbench.sparams]
+measure_sparams = true
+freq_start = 1e6
+freq_stop = 1e9
+points_per_decade = 50
+Stability_K_min = 1.0
+Stability_mu_min = 1.0
+S11_max_dB = -10.0
+S22_max_dB = -10.0
+
+[testbench.large_signal]
+measure_large_signal = true
+analysis = "transient_rf"
+cycles_settle = 40
+cycles_measure = 10
+timestep = 0.1e-9
+tstop = 200e-9
+measure_start = 160e-9
+rf_input_vpk = 0.112202
+input_power_sweep_dbm = [-25.0, -20.0, -15.0, -12.0, -9.0, -6.0, -3.0]
+
+[testbench.harmonics]
+measure_harmonics = true
+max_harmonic = 5
+H2_max_dBc = -25.0
+H3_max_dBc = -25.0
+
+[testbench.load_pull]
+measure_load_pull = false
+gamma_mag_points = [0.3333333333]
+gamma_angle_deg_points = [0.0, 60.0, 120.0, 180.0, 240.0, 300.0]
+
+[testbench.power_sweep]
+measure_power_sweep = true
+input_power_sweep_dbm = [-25.0, -20.0, -15.0, -12.0, -9.0, -6.0, -3.0]
+
+[testbench.modulated]
+measure_modulated = false
+EVM_max_percent = 0.0
+ACLR_max_dBc = 0.0
+
+[testbench.data]
+data_DC = "DC"
+data_SPARAM = "SPARAM"
+data_LARGE_SIGNAL = "LARGE_SIGNAL"
+data_HARMONICS = "HARMONICS"
+data_RELIABILITY = "RELIABILITY"
+data_LOAD_PULL = "LOAD_PULL"
+data_MODULATED = "MODULATED"
+data_WAVEFORM = "WAVEFORM"
+
+[circuit.params_file]
+use_params_file = false
+generate_params_file = false
+API_mode = false
+generate_num_params = 10
+
+[circuit.params_format]
+use_width_to_length_ratio = true
+ration_field_suffix = "WL_ratio"
+
+[circuit.params_range]
+MDRV_L_range = [0.28, 2.0, 0.01]
+MDRV_WL_ratio_range = [1.0, 40.0, 0.1]
+MDRV_M_range = [1.0, 80.0, 1.0]
+MOUT_L_range = [0.28, 2.0, 0.01]
+MOUT_WL_ratio_range = [1.0, 80.0, 0.1]
+MOUT_M_range = [1.0, 200.0, 1.0]
+Cin_value_range = [1e-15, 10e-12, 1e-15]
+Cinter_value_range = [1e-15, 20e-12, 1e-15]
+Rbiasdrv_value_range = [1000.0, 1000000.0, 1000.0]
+Rbiasout_value_range = [1000.0, 1000000.0, 1000.0]
+Rgout_value_range = [1.0, 1000.0, 1.0]
+Lh2_value_range = [1e-9, 200e-9, 1e-12]
+Ch2_value_range = [10e-15, 10e-12, 1e-15]
+Rh2_value_range = [0.1, 100.0, 0.1]
+Rh2c_value_range = [0.1, 100.0, 0.1]
+Lh3_value_range = [1e-9, 200e-9, 1e-12]
+Ch3_value_range = [10e-15, 10e-12, 1e-15]
+Rh3_value_range = [0.1, 100.0, 0.1]
+Rh3c_value_range = [0.1, 100.0, 0.1]
+
+[circuit.params]
+MDRV_L = 0.28
+MDRV_WL_ratio = 12.0
+MDRV_M = 20
+MOUT_L = 0.28
+MOUT_WL_ratio = 35.0
+MOUT_M = 80
+Cin_value = 2e-12
+Cinter_value = 2e-12
+Rbiasdrv_value = 20000.0
+Rbiasout_value = 20000.0
+Rgout_value = 10.0
+Lh2_value = 50.661e-9
+Ch2_value = 2e-12
+Rh2_value = 7.96
+Rh2c_value = 1.59
+Lh3_value = 45.032e-9
+Ch3_value = 1e-12
+Rh3_value = 10.61
+Rh3c_value = 2.12
+
+[circuit.mosfet_pairs]
+
+[circuit.op_region]
+extract_op_region = true
+device_prefix = "m"
+op_variable_list_mos = [
+    "gm", "gds", "gmbs",
+    "vgs", "vds", "vbs", "vth", "vdsat", "id",
+    "cgs", "cgd", "cdb", "csb",
+]
+
+[circuit.op_region.transistor_dict]
+MDRV = "0"
+MOUT = "1"

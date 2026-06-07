@@ -1,0 +1,3 @@
+Runnable idealized RFPA topology seed.
+
+This class-E switching PA can run the standard RFPA smoke tests. Treat peak Vds/Ids, turn-on Vds, dVds/dt, choke realism, finite-Q loss, and mismatch closure as advisory until class-E-specific waveform-stress checks are implemented.

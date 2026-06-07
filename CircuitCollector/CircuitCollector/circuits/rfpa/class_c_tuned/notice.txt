@@ -1,0 +1,3 @@
+Runnable idealized RFPA topology seed.
+
+This class-C tuned PA can run the standard RFPA smoke tests. Treat conduction-angle, startup/settling, finite-Q tank behavior, and load-pull closure as advisory until class-C-specific parser checks are added.

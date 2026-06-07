@@ -1,0 +1,6 @@
+* GF180MCU-D — global parameter settings (MC switches off for deterministic sim)
+.include {{pdk_path}}/libs.tech/ngspice/design.ngspice
+
+* Load all device models for the chosen process corner.
+* Available corners: typical, ff, ss, fs, sf
+.lib '{{pdk_path}}/libs.tech/ngspice/sm141064.ngspice' {{corner}}

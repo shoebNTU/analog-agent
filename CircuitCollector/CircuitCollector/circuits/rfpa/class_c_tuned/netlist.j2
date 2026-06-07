@@ -1,0 +1,25 @@
+* GF180MCU-D scaffold-only class-C tuned RF PA.
+* Pins: gnda vdda rfin rfout vbias
+* Status: topology seed only; intended for constant-envelope exploration.
+.subckt {{netlist_name}} gnda vdda rfin rfout vbias
+
+* Output device biased below/near threshold by the external vbias setting.
+MMOUT drain gate gnda gnda nfet_03v3.12 l={{ M1_L }}u w={{ M1_W }}u m={{ M1_M }}
+
+* Input coupling and gate bias.
+CINBLK rfin gate_in {{ Cin_value }}
+RGSTOP gate_in gate {{ Rg_value }}
+RBIAS gate vbias {{ Rbias_value }}
+
+* Idealized choke plus high-Q tank seed near 250 MHz.
+LRFC vdda drain 300n
+RRFC vdda drain 10k
+RTANK drain tank 4
+LTANK tank tank_c 40.5n
+CTANK tank_c gnda 10p
+
+* AC-coupled output placeholder.
+COUT drain rfout {{ Cout_value }}
+ROUTLEAK rfout gnda 1G
+
+.ends {{netlist_name}}

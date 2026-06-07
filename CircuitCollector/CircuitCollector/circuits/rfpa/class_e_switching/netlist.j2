@@ -1,0 +1,24 @@
+* GF180MCU-D scaffold-only class-E switching RF PA.
+* Pins: gnda vdda rfin rfout vbias
+* Status: topology seed only. Class-E needs waveform-stress validation before
+* use because ideal switch-mode waveforms can exceed 3.3 V device limits.
+.subckt {{netlist_name}} gnda vdda rfin rfout vbias
+
+* Switch device. The gate is AC-coupled; vbias may be tied near 0 V for
+* switching operation in a future class-E-aware testbench.
+MSW drain gate gnda gnda nfet_03v3.12 l={{ M1_L }}u w={{ M1_W }}u m={{ M1_M }}
+CINBLK rfin gate_in {{ Cin_value }}
+RGSTOP gate_in gate {{ Rg_value }}
+RGLEAK gate vbias 100k
+
+* Idealized class-E feed and shunt capacitance seed.
+LRFC vdda drain 300n
+RRFC vdda drain 10k
+CSHUNT drain gnda {{ Cshunt_value }}
+
+* Series output network seed. Values are placeholders for 250 MHz synthesis.
+LSER drain ser_c 40n
+CSER ser_c rfout {{ Cseries_value }}
+ROUTLEAK rfout gnda 1G
+
+.ends {{netlist_name}}

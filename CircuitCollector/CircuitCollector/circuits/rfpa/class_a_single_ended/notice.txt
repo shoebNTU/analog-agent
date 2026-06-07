@@ -1,0 +1,3 @@
+Runnable idealized RFPA topology seed.
+
+This class-A common-source PA can exercise the standard single-ended RFPA smoke tests: DC, S-parameter estimate, large-signal transient, harmonics, and power sweep. Treat the RF choke, tank, and finite-Q passive assumptions as schematic seeds, not signoff evidence.

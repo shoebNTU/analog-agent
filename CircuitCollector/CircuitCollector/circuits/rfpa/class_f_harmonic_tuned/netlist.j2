@@ -1,0 +1,28 @@
+* GF180MCU-D scaffold-only class-F harmonic-tuned RF PA.
+* Pins: gnda vdda rfin rfout vbias
+* Status: topology seed only; harmonic terminations are placeholders.
+.subckt {{netlist_name}} gnda vdda rfin rfout vbias
+
+* Output device.
+MMOUT drain gate gnda gnda nfet_03v3.12 l={{ M1_L }}u w={{ M1_W }}u m={{ M1_M }}
+
+* Input coupling and bias.
+CINBLK rfin gate_in {{ Cin_value }}
+RGSTOP gate_in gate {{ Rg_value }}
+RBIAS gate vbias {{ Rbias_value }}
+
+* Fundamental feed and output coupling seed.
+LRFC vdda drain 250n
+RRFC vdda drain 10k
+COUT drain rfout {{ Cout_value }}
+ROUTLEAK rfout gnda 1G
+
+* Placeholder harmonic terminations around 2f0 and 3f0.
+R2TERM drain h2_l 8
+L2TERM h2_l h2_c 50.7n
+C2TERM h2_c gnda 2p
+R3TERM drain h3_l 10
+L3TERM h3_l h3_c 45.0n
+C3TERM h3_c gnda 1p
+
+.ends {{netlist_name}}

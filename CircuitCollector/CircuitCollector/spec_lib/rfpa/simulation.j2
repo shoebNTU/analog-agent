@@ -1,0 +1,82 @@
+* RFPA large-signal simulation template.
+* Harmonics, Pout, gain, efficiency, and current limits are computed from the
+* transient waveform by the RFPA parser. S-parameter stability still requires
+* a dedicated two-port small-signal testbench.
+
+VDD vdd 0 {{supply_voltage}}
+VBIAS vbias 0 {{bias_voltage}}
+VIN rfin_src 0 DC 0 AC 0 SIN(0 {{rf_input_vpk|default(0.2244)}} {{f0}})
+RSRC rfin_src rfin {{R_source}}
+{% if X_load_ohm > 0 %}
+RLOAD rfout rload_x {{R_load_real}}
+LLOAD rload_x 0 {{X_load_ohm / (2 * 3.141592653589793 * f0)}}
+{% elif X_load_ohm < 0 %}
+RLOAD rfout rload_x {{R_load_real}}
+CLOAD rload_x 0 {{-1 / (2 * 3.141592653589793 * f0 * X_load_ohm)}}
+{% else %}
+RLOAD rfout 0 {{R_load_real}}
+{% endif %}
+
+xpa 0 vdd rfin rfout vbias {{netlist_name}}
+
+{% if measure_sparams %}
+* Small-signal input-driven two-port estimate.
+VDD_S11 vdd_s11 0 {{supply_voltage}}
+VBIAS_S11 vbias_s11 0 {{bias_voltage}}
+VIN_S11 s11_src 0 DC 0 AC 1
+RS_S11 s11_src s11_in {{R_source}}
+RLOAD_S11 s11_out 0 {{R_load}}
+XS11 0 vdd_s11 s11_in s11_out vbias_s11 {{netlist_name}}
+
+* Small-signal output-driven reverse/output estimate.
+VDD_S22 vdd_s22 0 {{supply_voltage}}
+VBIAS_S22 vbias_s22 0 {{bias_voltage}}
+RIN_S22 s22_in 0 {{R_source}}
+VOUT_S22 s22_src 0 DC 0 AC 1
+RS_S22 s22_src s22_out {{R_load}}
+XS22 0 vdd_s22 s22_in s22_out vbias_s22 {{netlist_name}}
+{% endif %}
+
+.control
+save all
+.options savecurrents
+set filetype=ascii
+set wr_singlescale
+set wr_vecnames
+{% if temperature is defined %}
+option temp={{temperature}}
+{% endif %}
+
+op
+let idc_total = -i(VDD)
+let pdc_w = idc_total * {{supply_voltage}}
+print idc_total pdc_w > {{data_DC}}.txt
+
+{% if measure_sparams %}
+ac dec {{sparam_points_per_decade}} {{sparam_freq_start}} {{sparam_freq_stop}}
+wrdata {{data_SPARAM}}.txt frequency v(s11_in) v(s11_out) v(s22_out) v(s22_in)
+{% endif %}
+
+{% if measure_large_signal %}
+tran {{timestep|default("20p")}} {{tstop|default("2u")}}
+wrdata {{data_WAVEFORM}}.txt time v(rfout) i(VDD)
+meas tran vout_avg AVG v(rfout) from={{measure_start|default("1u")}} to={{tstop|default("2u")}}
+meas tran vout_max MAX v(rfout) from={{measure_start|default("1u")}} to={{tstop|default("2u")}}
+meas tran vout_min MIN v(rfout) from={{measure_start|default("1u")}} to={{tstop|default("2u")}}
+meas tran idd_avg AVG i(VDD) from={{measure_start|default("1u")}} to={{tstop|default("2u")}}
+let vout_ac = v(rfout) - vout_avg
+meas tran vout_rms RMS vout_ac from={{measure_start|default("1u")}} to={{tstop|default("2u")}}
+let pdc_w = -idd_avg * {{supply_voltage}}
+let pout_w = vout_rms * vout_rms / {{R_load}}
+let pout_dbm = 10 * log10(pout_w / 1e-3)
+let drain_efficiency = 100 * pout_w / pdc_w
+let iout_rms = vout_rms / {{R_load}}
+let iout_pk_est = (vout_max - vout_min) / (2 * {{R_load}})
+print vout_avg vout_rms vout_max vout_min idd_avg pdc_w pout_w pout_dbm drain_efficiency iout_rms iout_pk_est > {{data_LARGE_SIGNAL}}.txt
+{% endif %}
+
+{% if measure_harmonics %}
+* Harmonics are computed from {{data_WAVEFORM}}.txt in result_parser.py.
+{% endif %}
+
+.endc

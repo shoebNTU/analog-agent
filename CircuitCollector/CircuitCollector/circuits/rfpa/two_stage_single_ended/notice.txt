@@ -1,0 +1,7 @@
+Runnable RFPA topology seed.
+
+This template mirrors the RFIC textbook's driver + output-stage PA archetype
+using the standard RFPA five-pin testbench interface. It is useful for gain,
+drive, and interstage-loading experiments, but the driver bias, interstage
+match, and output match are schematic seeds rather than validated signoff
+networks.

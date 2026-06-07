@@ -1,0 +1,19 @@
+.subckt {{netlist_name}} gnda vdda vinn vinp vout Ib
+* PMOS mirror load — single transistor per branch — GF180MCU-D
+XM1 net1  net1 vdda vdda pfet_03v3 l={{ M1_L }}u w={{ M1_W }}u m={{ M1_M }}
+XM2 net5  net1 vdda vdda pfet_03v3 l={{ M1_L }}u w={{ M1_W }}u m={{ M1_M }}
+* NMOS diff pair
+XM3 net1  vinn net2 gnda nfet_03v3 l={{ M3_L }}u w={{ M3_W }}u m={{ M3_M }}
+XM4 net5  vinp net2 gnda nfet_03v3 l={{ M3_L }}u w={{ M3_W }}u m={{ M3_M }}
+* Tail current source + bias reference
+XM5 net3  net3 gnda gnda nfet_03v3 l={{ M5_L }}u w={{ M5_W }}u m={{ M5_M }}
+XM6 net2  net3 gnda gnda nfet_03v3 l={{ M5_L }}u w={{ M5_W }}u m={{ M6_M }}
+* Second stage — PMOS CS amplifier + NMOS current source
+XM7 vout  net5 vdda vdda pfet_03v3 l={{ M7_L }}u w={{ M7_W }}u m={{ M7_M }}
+XM8 vout  net3 gnda gnda nfet_03v3 l={{ M5_L }}u w={{ M5_W }}u m={{ M8_M }}
+* Miller compensation
+R_Rc net5 net_rc {{ Rc_value }}
+C_C1 net_rc vout {{ C1_value }}
+I0 vdda net3 'IBIAS'
+Rdum_Ib Ib gnda 1
+.ends {{netlist_name}}

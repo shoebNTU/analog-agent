@@ -1,0 +1,34 @@
+* GF180MCU-D pad-limited class-AB common-source RF PA.
+* Pins: gnda vdda rfin rfout vbias
+* This mirrors the reference RFPA common-source example:
+* 250 MHz, 50 ohm external load, high-pass output match, and H2/H3 traps.
+.subckt {{netlist_name}} gnda vdda rfin rfout vbias
+
+* Output device: total W ~= 897.6 um with the default M1 settings.
+MMOUT drain gate gnda gnda nfet_03v3.12 l={{ M1_L }}u w={{ M1_W }}u m={{ M1_M }}
+
+* Bias and stabilization.
+CINBLK rfin gate_in 100p
+RGSTOP gate_in gate 3.3
+IBIAS vdda drain 10m
+RBLEED gate vbias 20k
+
+* AC-coupled high-pass L-match: roughly transforms 50 ohm to 200 ohm.
+CBLOCK drain nmatch 100p
+RNMATCH nmatch gnda 1G
+RCSER nmatch nmatch_cser 1.73
+CSER nmatch_cser rfout 7.351p
+RLSHUNT rfout lshunt_top 5.77
+LSHUNT lshunt_top gnda 73.511n
+
+* Harmonic traps: series-resonant shunts near H2 and H3.
+RLH2 rfout h2trap_l 7.96
+LH2 h2trap_l h2trap 50.661n
+RCH2 h2trap h2trap_c 1.59
+CH2 h2trap_c gnda 2p
+RLH3 rfout h3trap_l 10.61
+LH3 h3trap_l h3trap 45.032n
+RCH3 h3trap h3trap_c 2.12
+CH3 h3trap_c gnda 1p
+
+.ends {{netlist_name}}

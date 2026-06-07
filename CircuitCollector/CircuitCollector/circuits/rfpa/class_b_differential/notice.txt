@@ -1,0 +1,3 @@
+Runnable idealized RFPA topology seed.
+
+This class-B differential PA uses ideal splitter/combiner placeholders so it can exercise the standard RFPA smoke tests. Results are topology-exploration evidence only until a differential RF testbench, combiner/balun loss model, common-mode checks, and even-order cancellation metrics are implemented.

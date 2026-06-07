@@ -1,0 +1,162 @@
+[tech]
+name = "gf180mcuD"
+
+[type]
+name = "rfpa"
+
+[rfpa]
+name = "differential_cascode_transformer"
+description = "Textbook-style differential cascode RF PA with passive transformer and neutralization seed"
+template_only = false
+simulation_enabled = true
+validation_status = "runnable_idealized_seed"
+recommended_use = "Explore differential cascode isolation, neutralization, and transformer/balun assumptions."
+notes = "Single-ended RFPA testbench drives an internal idealized coupled-inductor transformer. Requires real transformer and differential testbench for signoff."
+
+[tech_lib]
+pdk_path = "PDK/gf180mcuD"
+corner = "typical"
+
+[testbench.dc]
+measure_DC = true
+supply_voltage = 3.3
+temperature = 27
+bias_voltage = 0.75
+
+[testbench.rf]
+f0 = 250e6
+f_max_pad = 300e6
+R_source = 50.0
+R_load = 50.0
+Pout_target = 2e-3
+Pout_target_dbm = 3.0
+Pin_available_dbm = -9.0
+PAPR_dB = 0.0
+reference_plane = "idealized_transformer_secondary"
+passive_scope = "idealized_coupled_inductor_transformer"
+
+[testbench.rf_limits]
+I_pad_max = 10e-3
+Iout_rms_max = 10e-3
+Iout_pk_max = 10e-3
+Pdc_max = 33e-3
+Max_device_voltage = 3.3
+Max_Idc_total = 10e-3
+
+[testbench.sparams]
+measure_sparams = true
+freq_start = 1e6
+freq_stop = 1e9
+points_per_decade = 50
+Stability_K_min = 1.0
+Stability_mu_min = 1.0
+S11_max_dB = -10.0
+S22_max_dB = -10.0
+
+[testbench.large_signal]
+measure_large_signal = true
+analysis = "transient_rf"
+cycles_settle = 40
+cycles_measure = 10
+timestep = 0.1e-9
+tstop = 200e-9
+measure_start = 160e-9
+rf_input_vpk = 0.224404
+input_power_sweep_dbm = [-25.0, -20.0, -15.0, -12.0, -9.0, -6.0, -3.0]
+
+[testbench.harmonics]
+measure_harmonics = true
+max_harmonic = 5
+H2_max_dBc = -25.0
+H3_max_dBc = -25.0
+
+[testbench.load_pull]
+measure_load_pull = false
+gamma_mag_points = [0.3333333333]
+gamma_angle_deg_points = [0.0, 60.0, 120.0, 180.0, 240.0, 300.0]
+
+[testbench.power_sweep]
+measure_power_sweep = true
+input_power_sweep_dbm = [-25.0, -20.0, -15.0, -12.0, -9.0, -6.0, -3.0]
+
+[testbench.modulated]
+measure_modulated = false
+EVM_max_percent = 0.0
+ACLR_max_dBc = 0.0
+
+[testbench.data]
+data_DC = "DC"
+data_SPARAM = "SPARAM"
+data_LARGE_SIGNAL = "LARGE_SIGNAL"
+data_HARMONICS = "HARMONICS"
+data_RELIABILITY = "RELIABILITY"
+data_LOAD_PULL = "LOAD_PULL"
+data_MODULATED = "MODULATED"
+data_WAVEFORM = "WAVEFORM"
+
+[circuit.params_file]
+use_params_file = false
+generate_params_file = false
+API_mode = false
+generate_num_params = 10
+
+[circuit.params_format]
+use_width_to_length_ratio = true
+ration_field_suffix = "WL_ratio"
+
+[circuit.params_range]
+M1_L_range = [0.28, 2.0, 0.01]
+M1_WL_ratio_range = [1.0, 60.0, 0.1]
+M1_M_range = [1.0, 100.0, 1.0]
+M2_L_range = [0.28, 2.0, 0.01]
+M2_WL_ratio_range = [1.0, 60.0, 0.1]
+M2_M_range = [1.0, 100.0, 1.0]
+MCAS1_L_range = [0.28, 2.0, 0.01]
+MCAS1_WL_ratio_range = [1.0, 60.0, 0.1]
+MCAS1_M_range = [1.0, 100.0, 1.0]
+MCAS2_L_range = [0.28, 2.0, 0.01]
+MCAS2_WL_ratio_range = [1.0, 60.0, 0.1]
+MCAS2_M_range = [1.0, 100.0, 1.0]
+Cin_value_range = [1e-15, 10e-12, 1e-15]
+Cneut_value_range = [0.0, 1e-12, 1e-15]
+Rgatebias_value_range = [1000.0, 1000000.0, 1000.0]
+RvcasTop_value_range = [10000.0, 1000000.0, 1000.0]
+RvcasBot_value_range = [10000.0, 1000000.0, 1000.0]
+
+[circuit.params]
+M1_L = 0.28
+M1_WL_ratio = 25.0
+M1_M = 40
+M2_L = 0.28
+M2_WL_ratio = 25.0
+M2_M = 40
+MCAS1_L = 0.28
+MCAS1_WL_ratio = 20.0
+MCAS1_M = 40
+MCAS2_L = 0.28
+MCAS2_WL_ratio = 20.0
+MCAS2_M = 40
+Cin_value = 2e-12
+Cneut_value = 20e-15
+Rgatebias_value = 20000.0
+RvcasTop_value = 100000.0
+RvcasBot_value = 80000.0
+
+[circuit.mosfet_pairs]
+diff_pair = ["M1", "M2"]
+cascode_pair = ["MCAS1", "MCAS2"]
+
+[circuit.op_region]
+extract_op_region = true
+device_prefix = "m"
+op_variable_list_mos = [
+    "gm", "gds", "gmbs",
+    "vgs", "vds", "vbs", "vth", "vdsat", "id",
+    "cgs", "cgd", "cdb", "csb",
+]
+
+[circuit.op_region.transistor_dict]
+M1 = "0"
+M2 = "1"
+MCAS1 = "2"
+MCAS2 = "3"

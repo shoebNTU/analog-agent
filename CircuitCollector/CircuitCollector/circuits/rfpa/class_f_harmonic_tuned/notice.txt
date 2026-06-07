@@ -1,0 +1,3 @@
+Runnable idealized RFPA topology seed.
+
+This class-F harmonic-tuned PA can run the standard RFPA smoke tests. Harmonic terminations are schematic placeholders; finite-Q harmonic impedance, waveform stress, and load-pull closure remain advisory until class-F-specific checks are implemented.

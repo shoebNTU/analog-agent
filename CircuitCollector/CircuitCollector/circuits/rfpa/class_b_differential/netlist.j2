@@ -1,0 +1,32 @@
+* GF180MCU-D scaffold-only class-B differential/push-pull RF PA.
+* Pins: gnda vdda rfin rfout vbias
+* Status: topology seed only. The current RFPA runner is single-ended; the
+* ideal splitter/combiner below is a placeholder for future differential flows.
+.subckt {{netlist_name}} gnda vdda rfin rfout vbias
+
+* Ideal single-ended-to-differential drive placeholder.
+CINBLK rfin gate_rf {{ Cin_value }}
+* Large DC leak prevents the AC-coupled splitter input from floating in OP/AC.
+RINLEAK gate_rf vbias 1G
+EINP gatep vbias gate_rf gnda 0.5
+EINN gaten vbias gate_rf gnda -0.5
+RGP gatep vbias {{ Rbias_value }}
+RGN gaten vbias {{ Rbias_value }}
+RGSTOPP gatep gatep_int {{ Rg_value }}
+RGSTOPN gaten gaten_int {{ Rg_value }}
+
+* Push-pull output devices.
+MMP drainp gatep_int gnda gnda nfet_03v3.12 l={{ M1_L }}u w={{ M1_W }}u m={{ M1_M }}
+MMN drainn gaten_int gnda gnda nfet_03v3.12 l={{ M2_L }}u w={{ M2_W }}u m={{ M2_M }}
+
+* Idealized RF chokes.
+LRFCP vdda drainp 200n
+LRFCN vdda drainn 200n
+RRFCP vdda drainp 10k
+RRFCN vdda drainn 10k
+
+* Ideal differential-to-single-ended combiner placeholder.
+EOUT rfout gnda drainp drainn 0.5
+ROUTLEAK rfout gnda 1G
+
+.ends {{netlist_name}}

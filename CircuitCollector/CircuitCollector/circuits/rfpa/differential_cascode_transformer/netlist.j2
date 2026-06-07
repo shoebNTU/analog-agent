@@ -1,0 +1,48 @@
+* GF180MCU-D textbook-style differential cascode/transformer RF PA seed.
+* Pins: gnda vdda rfin rfout vbias
+* The single-ended RFPA testbench is adapted with ideal internal balun/combiner
+* elements. This is runnable for schematic experiments, not transformer signoff.
+.subckt {{netlist_name}} gnda vdda rfin rfout vbias
+
+* Ideal single-ended to differential input drive around vbias.
+CIN rfin rfin_ac {{ Cin_value }}
+RINLEAK rfin_ac gnda 1G
+EINP gatep vbias rfin_ac gnda 0.5
+EINN gaten vbias rfin_ac gnda -0.5
+RGP gatep vbias {{ Rgatebias_value }}
+RGN gaten vbias {{ Rgatebias_value }}
+
+* Internal cascode bias seed.
+RVC1 vdda vcas {{ RvcasTop_value }}
+RVC2 vcas gnda {{ RvcasBot_value }}
+CVBYP vcas gnda 5p
+
+* Differential common-source devices.
+M1 midp gatep gnda gnda nfet_03v3.12 l={{ M1_L }}u w={{ M1_W }}u m={{ M1_M }}
+M2 midn gaten gnda gnda nfet_03v3.12 l={{ M2_L }}u w={{ M2_W }}u m={{ M2_M }}
+
+* Cascode devices for reverse isolation and voltage sharing.
+MCAS1 drainp vcas midp gnda nfet_03v3.12 l={{ MCAS1_L }}u w={{ MCAS1_W }}u m={{ MCAS1_M }}
+MCAS2 drainn vcas midn gnda nfet_03v3.12 l={{ MCAS2_L }}u w={{ MCAS2_W }}u m={{ MCAS2_M }}
+
+* Idealized RF feed. Current is split across the differential halves.
+IBP vdda drainp 4m
+IBN vdda drainn 4m
+RDP drainp gnda 1G
+RDN drainn gnda 1G
+
+* Optional neutralization seeds. Set Cneut_value small/nonzero in the config.
+CNEUTP drainp gaten {{ Cneut_value }}
+CNEUTN drainn gatep {{ Cneut_value }}
+
+* Passive transformer/combiner seed. This is still idealized, but unlike an
+* active VCVS combiner it does not create output power by itself.
+RPRI_P drainp pri_p 2
+LPRI pri_p pri_n 80n
+RPRI_N pri_n drainn 2
+RSEC rfout sec_t 2
+LSEC sec_t gnda 80n
+KOUT LPRI LSEC 0.85
+ROUTLEAK rfout gnda 1G
+
+.ends {{netlist_name}}

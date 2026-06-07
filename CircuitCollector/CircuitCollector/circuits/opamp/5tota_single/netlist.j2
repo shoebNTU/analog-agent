@@ -1,0 +1,15 @@
+* 5T OTA — single-transistor PMOS current-mirror load (classic) — GF180MCU-D
+* Devices: nfet_03v3 (3.3 V NMOS), pfet_03v3 (3.3 V PMOS)
+.subckt {{netlist_name}} gnda vdda vinn vinp vout Ib
+* NMOS diff pair
+XM1 vout  vinn net2 gnda nfet_03v3 l={{ M1_L }}u w={{ M1_W }}u m={{ M1_M }}
+XM2 net1  vinp net2 gnda nfet_03v3 l={{ M1_L }}u w={{ M1_W }}u m={{ M1_M }}
+* PMOS mirror load — single transistor per branch
+XM5 vout  net1 vdda vdda pfet_03v3 l={{ M5_L }}u w={{ M5_W }}u m={{ M5_M }}
+XM6 net1  net1 vdda vdda pfet_03v3 l={{ M5_L }}u w={{ M5_W }}u m={{ M5_M }}
+* Tail current source (M3) mirrors bias reference (M4)
+XM3 net2  net3 gnda gnda nfet_03v3 l={{ M3_L }}u w={{ M3_W }}u m={{ M3_M }}
+XM4 net3  net3 gnda gnda nfet_03v3 l={{ M4_L }}u w={{ M4_W }}u m={{ M4_M }}
+I0  vdda  net3 'IBIAS'
+Rdum_Ib Ib gnda 1
+.ends {{netlist_name}}
