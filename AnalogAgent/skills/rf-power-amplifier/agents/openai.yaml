@@ -1,0 +1,4 @@
+interface:
+  display_name: "RF Power Amplifier"
+  short_description: "Design, debug, and rank classes for integrated RF PAs."
+  default_prompt: "Use the RF PA skill to size, review, or auto-select a suitable PA class."
