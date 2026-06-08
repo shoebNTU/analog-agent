@@ -6,7 +6,7 @@ simulation backend that runs inside the IIC-OSIC-TOOLS container.
 
 The intended workflow is simple: open the setup notebook locally, connect it to
 the IIC-OSIC-TOOLS container's Jupyter kernel, run the notebook, then ask your
-agent to design and review a circuit using the running API.
+agent (Claude Code, Codex, Github Copilot etc.) to design and review a circuit using the running API.
 
 ## Quick Start
 
@@ -39,7 +39,9 @@ CircuitCollector in the container Python environment, starts the API, checks
 6. After the notebook reports a healthy API, open your coding agent from the
 `share_GF180_Analog` folder and give it one of the prompts below.
 
-## Agent Prompts
+## Agent Prompts 
+
+This 'agent prompt' is intended for code-generation assistants (for example: OpenAI Codex, Anthropic Claude Code, GitHub Copilot among others).
 
 ### RF Power Amplifier
 
