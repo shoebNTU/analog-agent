@@ -32,7 +32,7 @@ spec, chooses or sizes a topology, hands concrete parameters to a simulator,
 parses measured results, diagnoses misses, and iterates. That makes the design
 conversation inspectable, repeatable, and anchored in circuit evidence.
 
-![GF180 Analog Agent closed design loop](project_image.webp)
+![GF180 Analog Agent closed design loop](project_image.png)
 
 ## Project Summary
 
